@@ -7,12 +7,12 @@
     "module": true,
     "resourceType": "script"
   },
-  "C:/Users/chris/Desktop/TiendasNuestras/TN-NEW/TN-App/node_modules/nuxt/dist/app/entry.js": {
+  "C:/Users/chris/Desktop/ProyectosNew/TN-App/node_modules/nuxt/dist/app/entry.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
     "isEntry": true,
-    "file": "C:/Users/chris/Desktop/TiendasNuestras/TN-NEW/TN-App/node_modules/nuxt/dist/app/entry.js"
+    "file": "C:/Users/chris/Desktop/ProyectosNew/TN-App/node_modules/nuxt/dist/app/entry.js"
   }
 }
