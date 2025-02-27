@@ -173,7 +173,7 @@ export default {
           description: 'Ofrecemos una amplia variedad de productos frescos y de alta calidad.',
           ctaText: 'Comprar Ahora',
           ctaLink: '#',
-          image: '/path/to/food-image1.jpg'
+          image: 'images/header1.png'
         },
         {
           title: 'Descubre Nuestros Sabores',
@@ -181,7 +181,7 @@ export default {
           description: 'Nuestros productos están seleccionados para ofrecerte lo mejor.',
           ctaText: 'Ingresar',
           ctaLink: '#',
-          image: '/path/to/food-image2.jpg'
+          image: 'images/header2.png'
         }
       ],
       testimonials: [
