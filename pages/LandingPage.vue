@@ -6,15 +6,17 @@
       <div class="absolute inset-0 flex items-center justify-center">
         <div class="w-full h-full overflow-hidden">
           <div class="flex transition-transform duration-500 ease-in-out h-full" :style="{ transform: `translateX(-${currentSlide * 100}%)` }">
+            
             <div v-for="(slide, index) in slides" :key="index" class="w-full flex-shrink-0 h-full flex bg-gradient-to-r from-blue-500 to-green-500">
-              <div class="w-1/2 p-8 flex flex-col justify-center h-full">
-                <h2 class="text-4xl font-bold text-white">{{ slide.title }}</h2>
-                <h3 class="text-2xl text-white mt-4">{{ slide.subtitle }}</h3>
-                <p class="text-white mt-4">{{ slide.description }}</p>
-                <a :href="slide.ctaLink" class="mt-6 inline-block bg-white text-blue-500 py-2 px-4 rounded">{{ slide.ctaText }}</a>
-              </div>
-              <div class="w-1/2 bg-cover bg-center h-full" :style="{ backgroundImage: `url(${slide.image})` }"></div>
-            </div>
+  <div class="w-full md:w-1/2 p-8 flex flex-col justify-center h-full">
+    <h2 class="text-4xl font-bold text-white">{{ slide.title }}</h2>
+    <h3 class="text-2xl text-white mt-4">{{ slide.subtitle }}</h3>
+    <p class="text-white mt-4">{{ slide.description }}</p>
+    <a :href="slide.ctaLink" class="mt-6 inline-block bg-white text-blue-500 py-2 px-4 rounded">{{ slide.ctaText }}</a>
+  </div>
+  <div class="hidden md:block w-1/2 bg-cover bg-center h-full" :style="{ backgroundImage: `url(${slide.image})` }"></div>
+</div>
+
           </div>
         </div>
       </div>
@@ -282,7 +284,7 @@ export default {
 }
 
 .hero-content {
-  width: 50%;
+  width: 100%; /* Cambia a 100% para dispositivos móviles */
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -295,6 +297,12 @@ export default {
   background-size: cover;
   background-position: center;
   height: 100%;
+}
+
+@media (min-width: 768px) {
+  .hero-content {
+    width: 50%; /* Cambia a 50% para dispositivos mayores a 768px */
+  }
 }
 
 .testimonial-section {
