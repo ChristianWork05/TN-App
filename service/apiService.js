@@ -12,6 +12,9 @@ export default {
   getData() {
     return apiClient.get('/data');
   },
+  getProducts() {
+    return apiClient.get('/resto/product');
+  },
   getCategoryData() {
     const data = JSON.stringify({
       query: ``,
@@ -21,5 +24,5 @@ export default {
     return apiClient.get('/resto/category/', {
       data: data
     });
-  }
+  },
 }

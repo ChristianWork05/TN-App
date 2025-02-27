@@ -25,8 +25,13 @@
             </svg>
             Carrito ({{ cart.length }})
           </a>
-          <div v-if="showCart" class="absolute right-0 mt-2 w-64 bg-white border rounded shadow-lg">
-            <div class="p-4">
+          <div v-if="showCart" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" @click.self="toggleCart">
+            <div class="relative mt-16 w-64 bg-white border rounded shadow-lg p-4">
+              <button @click="toggleCart" class="absolute top-2 right-2 text-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
               <h2 class="text-xl font-bold mb-4">Carrito de Compras</h2>
               <div v-if="cart.length === 0" class="text-center">El carrito está vacío</div>
               <div v-else>
@@ -34,10 +39,11 @@
                   <div>
                     <h3 class="font-bold">{{ item.name }}</h3>
                     <p>{{ item.price | currency }} x {{ item.quantity }}</p>
+                    <p v-if="item.discount">Descuento: {{ item.discount | currency }}</p>
                   </div>
                   <div class="flex items-center">
                     <button @click="removeFromCart(index)" class="text-red-500 hover:text-red-700">Eliminar</button>
-                    <input type="number" v-model.number="item.quantity" min="1" class="ml-2 w-12 text-center border rounded" />
+                    <input type="number" v-model.number="item.quantity" min="1" @change="updateCartItem(index, item.quantity)" class="ml-2 w-12 text-center border rounded" />
                   </div>
                 </div>
                 <div class="border-t pt-4">
@@ -91,7 +97,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['removeFromCart'])
+const emit = defineEmits(['removeFromCart', 'updateCartItem'])
 
 const navigation = [
   { name: 'Ordenar', href: '#' },
@@ -111,8 +117,12 @@ const removeFromCart = (index) => {
   emit('removeFromCart', index)
 }
 
+const updateCartItem = (index, quantity) => {
+  emit('updateCartItem', { index, quantity })
+}
+
 const subtotal = computed(() => {
-  return props.cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
+  return props.cart.reduce((acc, item) => acc + (item.price - (item.discount || 0)) * item.quantity, 0)
 })
 
 const tax = computed(() => {

@@ -25,24 +25,26 @@
 
     <!-- Products Section -->
     <section class="py-12" v-if="selectedCategory">
-      <div class="container mx-auto">
-        <button @click="clearCategory" class="mb-4 flex items-center text-blue-500 hover:text-blue-700">
-          <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-          </svg>
-          Volver a Categorías
-        </button>
-        <h2 class="text-3xl font-bold text-center mb-8">Nuestros Productos</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div v-for="product in products" :key="product.id" class="border p-4 rounded">
-            <img :src="product.image" :alt="product.name" class="w-full h-48 object-cover">
-            <h3 class="text-xl font-bold mt-4">{{ product.name }}</h3>
-            <p class="mt-2">{{ product.price | currency }}</p>
-            <button @click="addToCart(product)" class="mt-4 bg-blue-500 text-white py-2 px-4 rounded">Añadir al Carrito</button>
-          </div>
-        </div>
+  <div class="container mx-auto">
+    <button @click="clearCategory" class="mb-4 flex items-center text-blue-500 hover:text-blue-700">
+      <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+      Volver a Categorías
+    </button>
+    <h2 class="text-3xl font-bold text-center mb-8">Nuestros Productos</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div v-for="element in products" :key="element.name" class="border p-4 rounded">
+        <img :src="element.image" :alt="element.name" class="w-full h-48 object-cover">
+        <h3 class="text-xl font-bold mt-4">{{ element.name }}</h3>
+        <p class="mt-2">{{ element.price | currency }}</p>
+        <p v-if="element.discount" class="mt-2 text-red-500">Descuento: {{ element.discount }}</p>
+        <p class="mt-2 text-gray-500">Categoría: {{ element.category }}</p>
+        <button @click="addToCart(element)" class="mt-4 bg-blue-500 text-white py-2 px-4 rounded">Añadir al Carrito</button>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
     <!-- Testimonials Section -->
     <section class="bg-gray-100 py-12">
@@ -156,6 +158,7 @@
 <script>
 import Header from '../components/Header.vue';
 import Products from '../components/Products.vue';
+import apiService from '../service/apiService';
 
 export default {
   components: {
@@ -205,26 +208,40 @@ export default {
   },
   methods: {
     addToCart(product) {
-      const cartItem = this.cart.find(item => item.id === product.id);
-      if (cartItem) {
-        cartItem.quantity++;
-      } else {
-        this.cart.push({ ...product, quantity: 1 });
-      }
-    },
+    const cartItem = this.cart.find(item => item.id === product.id);
+    if (cartItem) {
+      cartItem.quantity++;
+    } else {
+      this.cart.push({ ...product, quantity: 1 });
+    }
+  },
     removeFromCart(index) {
       this.cart.splice(index, 1);
     },
-    fetchProductsByCategory(category) {
-      // Aquí puedes hacer una llamada a la API para obtener los productos por categoría
-      // Por ahora, vamos a simularlo con datos estáticos
-      this.selectedCategory = category;
-      this.products = [
-        { id: 1, name: 'Producto 1', price: 100.00, image: '/path/to/product1.jpg' },
-        { id: 2, name: 'Producto 2', price: 150.00, image: '/path/to/product2.jpg' },
-        { id: 3, name: 'Producto 3', price: 200.00, image: '/path/to/product3.jpg' }
-      ];
-    },
+
+    async fetchProductsByCategory(category) {
+    this.selectedCategory = category;
+    try {
+      const response = await apiService.getProducts();
+      console.log('API response:', response.data); // Verifica los datos recibidos
+      // Asegúrate de que response.data es un array
+      if (Array.isArray(response.data.entity)) {
+        this.products = response.data.entity.filter(element => element.category === category.name).map(element => ({
+          category: element.category,
+          discount: element.discount,
+          image: element.image,
+          name: element.name,
+          price: element.price
+        }));
+        console.log('Filtered products:', this.products); // Verifica los productos filtrados
+      } else {
+        console.error('Expected an array but got:', response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  },
+
     clearCategory() {
       this.selectedCategory = null;
       this.products = [];
