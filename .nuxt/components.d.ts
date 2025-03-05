@@ -4,7 +4,9 @@ type IslandComponent<T extends DefineComponent> = T & DefineComponent<{}, {refre
 interface _GlobalComponents {
       'Button': typeof import("../components/Button.vue")['default']
     'Header': typeof import("../components/Header.vue")['default']
+    'Login': typeof import("../components/Login.vue")['default']
     'Products': typeof import("../components/Products.vue")['default']
+    'Register': typeof import("../components/Register.vue")['default']
     'NuxtWelcome': typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
     'NuxtLayout': typeof import("../node_modules/nuxt/dist/app/components/nuxt-layout")['default']
     'NuxtErrorBoundary': typeof import("../node_modules/nuxt/dist/app/components/nuxt-error-boundary")['default']
@@ -30,7 +32,9 @@ interface _GlobalComponents {
     'NuxtRouteAnnouncer': IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
       'LazyButton': typeof import("../components/Button.vue")['default']
     'LazyHeader': typeof import("../components/Header.vue")['default']
+    'LazyLogin': typeof import("../components/Login.vue")['default']
     'LazyProducts': typeof import("../components/Products.vue")['default']
+    'LazyRegister': typeof import("../components/Register.vue")['default']
     'LazyNuxtWelcome': typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
     'LazyNuxtLayout': typeof import("../node_modules/nuxt/dist/app/components/nuxt-layout")['default']
     'LazyNuxtErrorBoundary': typeof import("../node_modules/nuxt/dist/app/components/nuxt-error-boundary")['default']
@@ -62,7 +66,9 @@ declare module 'vue' {
 
 export const Button: typeof import("../components/Button.vue")['default']
 export const Header: typeof import("../components/Header.vue")['default']
+export const Login: typeof import("../components/Login.vue")['default']
 export const Products: typeof import("../components/Products.vue")['default']
+export const Register: typeof import("../components/Register.vue")['default']
 export const NuxtWelcome: typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
 export const NuxtLayout: typeof import("../node_modules/nuxt/dist/app/components/nuxt-layout")['default']
 export const NuxtErrorBoundary: typeof import("../node_modules/nuxt/dist/app/components/nuxt-error-boundary")['default']
@@ -88,7 +94,9 @@ export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components
 export const NuxtRouteAnnouncer: IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
 export const LazyButton: typeof import("../components/Button.vue")['default']
 export const LazyHeader: typeof import("../components/Header.vue")['default']
+export const LazyLogin: typeof import("../components/Login.vue")['default']
 export const LazyProducts: typeof import("../components/Products.vue")['default']
+export const LazyRegister: typeof import("../components/Register.vue")['default']
 export const LazyNuxtWelcome: typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
 export const LazyNuxtLayout: typeof import("../node_modules/nuxt/dist/app/components/nuxt-layout")['default']
 export const LazyNuxtErrorBoundary: typeof import("../node_modules/nuxt/dist/app/components/nuxt-error-boundary")['default']

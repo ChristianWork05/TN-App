@@ -210,13 +210,8 @@ export default {
   },
   methods: {
     addToCart(product) {
-    const cartItem = this.cart.find(item => item.id === product.id);
-    if (cartItem) {
-      cartItem.quantity++;
-    } else {
       this.cart.push({ ...product, quantity: 1 });
-    }
-  },
+    },
     removeFromCart(index) {
       this.cart.splice(index, 1);
     },
