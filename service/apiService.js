@@ -25,4 +25,27 @@ export default {
       data: data
     });
   },
+  login(email, password) {
+    const data = JSON.stringify({
+      email: email,
+      password: password
+    });
+
+    return apiClient.post('/user/login', data);
+  },
+  register(name, lastname, ruc, phone, address, email, password) {
+    const token = localStorage.getItem('userToken'); // Obtener el token del almacenamiento local
+    const data = JSON.stringify({
+      name: name,
+      lastname: lastname,
+      ruc: ruc,
+      phone: phone,
+      address: address,
+      email: email,
+      password: password,
+      token: token
+    });
+
+    return apiClient.post('/user/register/app', data);
+  }
 }

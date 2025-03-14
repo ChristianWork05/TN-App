@@ -32,18 +32,24 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import Register from './Register.vue'
+import apiService from '../service/apiService'
 
 const email = ref('')
 const password = ref('')
 const router = useRouter()
 const showRegister = ref(false)
 
-const handleLogin = () => {
-  // Aquí iría la lógica para manejar el login
-  console.log('Iniciar sesión con:', email.value, password.value)
-  // Redirigir al usuario a la página de checkout después de iniciar sesión
-  router.push('/checkout')
+const handleLogin = async () => {
+  try {
+    const response = await apiService.login(email.value, password.value);
+    console.log(JSON.stringify(response.data));
+    // Guardar el token o la información del usuario en el almacenamiento local
+    localStorage.setItem('user', JSON.stringify(response.data));
+    // Recargar la página para actualizar el estado de inicio de sesión
+    location.reload();
+  } catch (error) {
+    console.log(error);
+  }
 }
 </script>
 
