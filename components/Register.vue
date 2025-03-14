@@ -16,12 +16,32 @@
             <input type="text" v-model="form.ruc" id="ruc" required />
           </div>
           <div>
+            <label for="rucType">Tipo de RUC</label>
+            <input type="text" v-model="form.rucType" id="rucType" required />
+          </div>
+          <div>
             <label for="phone">Teléfono</label>
             <input type="text" v-model="form.phone" id="phone" required />
           </div>
           <div>
             <label for="address">Dirección</label>
             <input type="text" v-model="form.address" id="address" required />
+          </div>
+          <div>
+            <label for="city">Ciudad</label>
+            <input type="text" v-model="form.city" id="city" required />
+          </div>
+          <div>
+            <label for="state">Estado</label>
+            <input type="text" v-model="form.state" id="state" required />
+          </div>
+          <div>
+            <label for="zip">Código Postal</label>
+            <input type="text" v-model="form.zip" id="zip" required />
+          </div>
+          <div>
+            <label for="country">País</label>
+            <input type="text" v-model="form.country" id="country" required />
           </div>
           <div>
             <label for="email">Correo Electrónico</label>
@@ -47,8 +67,13 @@
           name: '',
           lastname: '',
           ruc: '',
+          rucType: '',
           phone: '',
           address: '',
+          city: '',
+          state: '',
+          zip: '',
+          country: '',
           email: '',
           password: ''
         }
@@ -61,8 +86,13 @@
             this.form.name,
             this.form.lastname,
             this.form.ruc,
+            this.form.rucType,
             this.form.phone,
             this.form.address,
+            this.form.city,
+            this.form.state,
+            this.form.zip,
+            this.form.country,
             this.form.email,
             this.form.password
           );
@@ -88,7 +118,7 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
-    overflow: hidden;
+    overflow: scroll;
   }
   
   .register-container h2 {
