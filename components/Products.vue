@@ -1,20 +1,11 @@
 <template>
-  <section class="py-16 bg-gray-100">
-    <!-- Section Title Start -->
-    <div>
-      <div class="animate_top text-center mb-12">
-        <h2 class="text-3xl font-bold text-gray-900">{{ sectionTitle }}</h2>
-        <p class="mt-4 text-lg text-gray-600">{{ sectionTitleText }}</p>
-      </div>
-    </div>
-    <!-- Section Title End -->
-
-    <div class="container mx-auto">
+  <section class="h-auto overflow-x-auto">
+    <div class="container mx-auto h-auto">
       <!-- Projects item wrapper -->
-      <div class="projects-wrapper grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="projects-wrapper flex flex-wrap h-full overflow-y-hidden">
         <!-- Project Item -->
-        <div v-for="project in projects" :key="project.id" :class="project.classes">
-          <div class="bg-white shadow-md rounded-lg overflow-hidden group relative" @click="selectCategory(project)">
+        <div v-for="project in projects" :key="project.id" class="flex-shrink-0  w-1/3 md:w-1/4 lg:w-1/5 p-2 ">
+          <div class="flex bg-white shadow-md rounded-lg overflow-hidden group " @click="selectCategory(project)">
             <img :src="project.image" alt="Project" class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110" />
           </div>
         </div>
@@ -26,9 +17,6 @@
 <script setup>
 import { ref, onMounted, defineEmits } from 'vue'
 import apiService from '~/service/apiService'
-
-const sectionTitle = ref('Categorias')
-const sectionTitleText = ref('It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using.')
 
 const projects = ref([])
 
@@ -46,7 +34,6 @@ onMounted(async () => {
         description: item.description || '', // Asegúrate de que la propiedad `description` exista en los datos de la API
         image: item.image, // Asegúrate de que la propiedad `image` exista en los datos de la API
         slug: item.slug, // Asegúrate de que la propiedad `slug` exista en los datos de la API
-        classes: 'branding' // Ajusta las clases según sea necesario
       }))
     } else {
       console.error('Expected an array but got:', response.data.entity)
