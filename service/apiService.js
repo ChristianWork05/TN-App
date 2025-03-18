@@ -52,5 +52,8 @@ export default {
     });
 
     return apiClient.post('/user/register', data);
+  },
+  getBranches() {
+    return apiClient.get('/resto/branches');
   }
 }
