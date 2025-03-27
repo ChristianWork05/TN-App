@@ -36,17 +36,20 @@
 <div v-if="activeTab === 0">
   <h2 class="text-2xl font-bold">{{ menuData.subtitle }}</h2>
   <p class="text-lg mt-2">{{ menuData.description }}</p>
+  <p class="text-gray-700 mt-4">{{ menuData.generalInfo }}</p>
+  <ul class="list-disc list-inside mt-4">
+    <li v-for="(highlight, index) in menuData.highlights" :key="index" class="text-gray-600">
+      {{ highlight }}
+    </li>
+  </ul>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-    <div
-      v-for="(item, index) in menuData.items"
-      :key="index"
-      class="border p-4 rounded-lg shadow-md"
-    >
-      <img :src="item.image" :alt="item.name" class="w-full h-48 object-cover rounded-md mb-4">
-      <h3 class="text-lg font-bold">{{ item.name }}</h3>
-      <p class="text-gray-500">{{ item.description }}</p>
-      <p class="text-blue-500 font-bold mt-2">{{ item.price }}</p>
-    </div>
+    <img
+  v-for="(image, index) in menuData.images"
+  :key="index"
+  :src="image"
+  :alt="`Imagen de ${menuData.title}`"
+  class="w-full h-48 object-cover rounded-md shadow-md"
+/>
   </div>
 </div>
       <div v-if="activeTab === 1">
@@ -174,11 +177,18 @@ const menuContent = [
   {
     id: 0,
     title: 'KFC',
-    subtitle: 'Menú de KFC',
-    description: 'Disfruta de nuestro delicioso pollo frito y más.',
-    items: [
-      { name: 'Pollo Frito', description: 'Crocante y jugoso.', price: '$10', image: '/images/kfc-chicken.png' },
-      { name: 'Hamburguesa', description: 'Sabrosa y llena de sabor.', price: '$8', image: '/images/kfc-burger.png' }
+    subtitle: 'Kentucky Fried Chicken',
+    description: 'KFC es una de las cadenas de comida rápida más reconocidas a nivel mundial, famosa por su pollo frito crujiente y delicioso.',
+    generalInfo: 'Fundada en 1930, KFC se especializa en ofrecer pollo frito preparado con una receta secreta de 11 hierbas y especias. Con más de 24,000 restaurantes en todo el mundo, KFC se ha convertido en un ícono de la comida rápida.',
+    highlights: [
+      'Pollo frito crujiente y jugoso.',
+      'Receta secreta de 11 hierbas y especias.',
+      'Presencia en más de 145 países.'
+    ],
+    images: [
+      '/images/kfc-store.jpg',
+      '/images/kfc-team.jpg',
+      '/images/kfc-food.jpg'
     ],
     location: 'Av. Principal 123, Ciudad',
     mapUrl: 'https://www.google.com/maps/embed?...'
@@ -186,11 +196,18 @@ const menuContent = [
   {
     id: 1,
     title: 'Pizza Hut',
-    subtitle: 'Menú de Pizza Hut',
-    description: 'Las mejores pizzas y acompañamientos.',
-    items: [
-      { name: 'Pizza Pepperoni', description: 'Un clásico favorito.', price: '$12', image: '/images/pizza-pepperoni.png' },
-      { name: 'Pan de Ajo', description: 'El acompañamiento perfecto.', price: '$5', image: '/images/pizza-garlic-bread.png' }
+    subtitle: 'Deliciosas Pizzas y Más',
+    description: 'Pizza Hut es conocida por sus pizzas innovadoras y deliciosas, así como por su compromiso con la calidad y el sabor.',
+    generalInfo: 'Desde su fundación en 1958, Pizza Hut ha sido pionera en la industria de las pizzas, ofreciendo una amplia variedad de sabores y estilos. Su misión es brindar momentos deliciosos para compartir.',
+    highlights: [
+      'Pizzas innovadoras y personalizables.',
+      'Más de 18,000 restaurantes en todo el mundo.',
+      'Compromiso con la calidad y el sabor.'
+    ],
+    images: [
+      '/images/pizza-hut-store.jpg',
+      '/images/pizza-hut-team.jpg',
+      '/images/pizza-hut-food.jpg'
     ],
     location: 'Calle Secundaria 456, Ciudad',
     mapUrl: 'https://www.google.com/maps/embed?...'
@@ -198,11 +215,18 @@ const menuContent = [
   {
     id: 2,
     title: 'Starbucks',
-    subtitle: 'Menú de Starbucks',
-    description: 'Café, pasteles y más.',
-    items: [
-      { name: 'Latte', description: 'Suave y cremoso.', price: '$4', image: '/images/starbucks-latte.png' },
-      { name: 'Croissant', description: 'Hojaldre y mantequilla.', price: '$3', image: '/images/starbucks-croissant.png' }
+    subtitle: 'Café y Experiencias Únicas',
+    description: 'Starbucks es la cadena de cafeterías más grande del mundo, ofreciendo café de alta calidad y un ambiente acogedor.',
+    generalInfo: 'Desde 1971, Starbucks ha redefinido la experiencia del café, creando un espacio donde las personas pueden reunirse, trabajar o relajarse mientras disfrutan de bebidas y alimentos de alta calidad.',
+    highlights: [
+      'Café de origen ético y alta calidad.',
+      'Más de 33,000 tiendas en todo el mundo.',
+      'Compromiso con la sostenibilidad y la comunidad.'
+    ],
+    images: [
+      '/images/starbucks-store.jpg',
+      '/images/starbucks-team.jpg',
+      '/images/starbucks-coffee.jpg'
     ],
     location: 'Plaza Central, Ciudad',
     mapUrl: 'https://www.google.com/maps/embed?...'
