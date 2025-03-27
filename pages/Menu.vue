@@ -186,9 +186,9 @@ const menuContent = [
       'Presencia en más de 145 países.'
     ],
     images: [
-      '/images/kfc-store.jpg',
-      '/images/kfc-team.jpg',
-      '/images/kfc-food.jpg'
+      '/images/franquicia-kfc.jpg',
+      '/images/guayaquil-ecuador-kfc.jpg',
+      '/images/kfc-comida.jpg'
     ],
     location: 'Av. Principal 123, Ciudad',
     mapUrl: 'https://www.google.com/maps/embed?...'
@@ -205,9 +205,9 @@ const menuContent = [
       'Compromiso con la calidad y el sabor.'
     ],
     images: [
-      '/images/pizza-hut-store.jpg',
-      '/images/pizza-hut-team.jpg',
-      '/images/pizza-hut-food.jpg'
+      '/images/New-Store-Image-Pizza_Hut_2-1536x1023.jpg',
+      '/images/love_pizza-768x682.jpg',
+      '/images/momo-upload.jpg'
     ],
     location: 'Calle Secundaria 456, Ciudad',
     mapUrl: 'https://www.google.com/maps/embed?...'
@@ -224,9 +224,9 @@ const menuContent = [
       'Compromiso con la sostenibilidad y la comunidad.'
     ],
     images: [
-      '/images/starbucks-store.jpg',
-      '/images/starbucks-team.jpg',
-      '/images/starbucks-coffee.jpg'
+      '/images/star-store.jpg',
+      '/images/Starbucks-Employees-Project-Photo-scaled.jpg',
+      '/images/starbucks-food-menu.jpg'
     ],
     location: 'Plaza Central, Ciudad',
     mapUrl: 'https://www.google.com/maps/embed?...'
