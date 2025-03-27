@@ -28,15 +28,27 @@
     </div>
     <div class="flex-1 p-4">
       <div class="flex items-center mb-4">
-        <svg @click="goToHero" class="w-8 h-8 mr-2 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-        </svg>
-        <h1 class="text-4xl font-bold">Devolada</h1>
-      </div>
-      <div v-if="activeTab === 0">
-        <h2 class="text-2xl">Inicio</h2>
-        <p>Contenido de la página de inicio.</p>
-      </div>
+  <svg @click="goToHero" class="w-8 h-8 mr-2 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+  </svg>
+  <h1 class="text-4xl font-bold">{{ menuData.title }}</h1>
+</div>
+<div v-if="activeTab === 0">
+  <h2 class="text-2xl font-bold">{{ menuData.subtitle }}</h2>
+  <p class="text-lg mt-2">{{ menuData.description }}</p>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+    <div
+      v-for="(item, index) in menuData.items"
+      :key="index"
+      class="border p-4 rounded-lg shadow-md"
+    >
+      <img :src="item.image" :alt="item.name" class="w-full h-48 object-cover rounded-md mb-4">
+      <h3 class="text-lg font-bold">{{ item.name }}</h3>
+      <p class="text-gray-500">{{ item.description }}</p>
+      <p class="text-blue-500 font-bold mt-2">{{ item.price }}</p>
+    </div>
+  </div>
+</div>
       <div v-if="activeTab === 1">
   <Products v-if="!selectedCategory" @categorySelected="fetchProductsByCategory" />
   <section class="py-12" v-if="selectedCategory">
@@ -85,9 +97,16 @@
         </div>
       </div>
       <div v-if="activeTab === 3">
-        <h2 class="text-2xl">Ubicación</h2>
-        <p>Contenido de la página de ubicación.</p>
-      </div>
+  <h2 class="text-2xl font-bold">Ubicación</h2>
+  <p class="text-lg mt-2">{{ menuData.location }}</p>
+  <iframe
+    v-if="menuData.mapUrl"
+    :src="menuData.mapUrl"
+    class="w-full h-64 mt-4 rounded-lg"
+    frameborder="0"
+    allowfullscreen
+  ></iframe>
+</div>
       <div v-if="showLogin" class="modal-overlay" @click.self="showLogin = false">
         <div class="modal">
           <button class="modal-close" @click="showLogin = false">&times;</button>
@@ -120,43 +139,105 @@
 </template>
 
 <script setup>
-import { ref, defineComponent, onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, watch, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import Products from '../components/Products.vue'
-import Login from '../components/Login.vue' // Importar el componente Login
+import Login from '../components/Login.vue'
 import apiService from '../service/apiService'
 
 const isLoggedIn = ref(false)
+const route = useRoute()
 const router = useRouter()
 const activeTab = ref(0)
-const cart = ref([]) // Suponiendo que el carrito se maneja aquí
+const cart = ref([])
 const selectedCategory = ref(null)
 const products = ref([])
-const showLogin = ref(false) // Definir la variable showLogin
+const showLogin = ref(false)
 
 const tabs = [
-  {
-    iconClass: '',
-    iconPath: 'm2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25',
-    iconPath2: ''
-  },
+  { iconClass: '', iconPath: 'm2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25', iconPath2: '' },
+  { iconClass: '', iconPath: 'm21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9', iconPath2: '' },
+  { iconClass: '', iconPath: 'M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z', iconPath2: '' },
+  { iconClass: '', iconPath: 'M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z', iconPath2: 'M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z' }
+]
 
+const menuData = ref({
+  title: '',
+  subtitle: '',
+  description: '',
+  items: [],
+  location: '',
+  mapUrl: ''
+})
+
+const menuContent = [
   {
-    iconClass: '',
-    iconPath: 'm21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9',
-    iconPath2: ''
+    id: 0,
+    title: 'KFC',
+    subtitle: 'Menú de KFC',
+    description: 'Disfruta de nuestro delicioso pollo frito y más.',
+    items: [
+      { name: 'Pollo Frito', description: 'Crocante y jugoso.', price: '$10', image: '/images/kfc-chicken.png' },
+      { name: 'Hamburguesa', description: 'Sabrosa y llena de sabor.', price: '$8', image: '/images/kfc-burger.png' }
+    ],
+    location: 'Av. Principal 123, Ciudad',
+    mapUrl: 'https://www.google.com/maps/embed?...'
   },
   {
-    iconClass: '',
-    iconPath: 'M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z',
-    iconPath2: ''
+    id: 1,
+    title: 'Pizza Hut',
+    subtitle: 'Menú de Pizza Hut',
+    description: 'Las mejores pizzas y acompañamientos.',
+    items: [
+      { name: 'Pizza Pepperoni', description: 'Un clásico favorito.', price: '$12', image: '/images/pizza-pepperoni.png' },
+      { name: 'Pan de Ajo', description: 'El acompañamiento perfecto.', price: '$5', image: '/images/pizza-garlic-bread.png' }
+    ],
+    location: 'Calle Secundaria 456, Ciudad',
+    mapUrl: 'https://www.google.com/maps/embed?...'
   },
   {
-    iconClass: '',
-    iconPath: 'M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
-    iconPath2: 'M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z'
+    id: 2,
+    title: 'Starbucks',
+    subtitle: 'Menú de Starbucks',
+    description: 'Café, pasteles y más.',
+    items: [
+      { name: 'Latte', description: 'Suave y cremoso.', price: '$4', image: '/images/starbucks-latte.png' },
+      { name: 'Croissant', description: 'Hojaldre y mantequilla.', price: '$3', image: '/images/starbucks-croissant.png' }
+    ],
+    location: 'Plaza Central, Ciudad',
+    mapUrl: 'https://www.google.com/maps/embed?...'
   }
 ]
+
+const loadMenuData = () => {
+  const menuId = parseInt(route.query.id)
+  if (!isNaN(menuId)) {
+    const selectedMenu = menuContent.find(menu => menu.id === menuId)
+    if (selectedMenu) {
+      menuData.value = selectedMenu
+    } else {
+      console.error('No se encontró un menú con el id:', menuId)
+      menuData.value = {
+        title: 'Menú no encontrado',
+        subtitle: '',
+        description: 'No se pudo cargar la información del menú.',
+        items: [],
+        location: '',
+        mapUrl: ''
+      }
+    }
+  } else {
+    console.error('El parámetro id no es válido:', route.query.id)
+  }
+}
+
+onMounted(() => {
+  loadMenuData()
+})
+
+watch(() => route.query.id, () => {
+  loadMenuData()
+})
 
 const handleAuth = () => {
   if (isLoggedIn.value) {
