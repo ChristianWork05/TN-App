@@ -34,9 +34,12 @@
           <img :src="product.image" :alt="product.name" class="w-full h-48 object-cover rounded">
           <h3 class="text-lg font-bold mt-2">{{ product.name }}</h3>
           <p class="text-gray-500 mt-1">{{ product.price | currency }}</p>
-          <button @click="openProductModal(product)" class="mt-2 bg-blue-500 text-white py-1 px-4 rounded">
-            Ver Detalles
-          </button>
+          <button 
+  @click="openProductModal(product)" 
+  class="mt-2 bg-[#0C0B0B] text-white py-1 px-4 rounded hover:bg-gray-800"
+>
+  Ver Detalles
+</button>
         </div>
       </div>
       <p v-else class="text-gray-500">No hay productos disponibles.</p>
@@ -61,7 +64,10 @@
         </div>
 
 <!-- Botón para añadir al carrito -->
-<button @click="addToCartWithExtras" class="bg-green-500 text-white py-2 px-4 rounded w-full">
+<button 
+  @click="addToCartWithExtras" 
+  class="bg-[#0C0B0B] text-white py-2 px-4 rounded w-full hover:bg-gray-800"
+>
   Añadir al Carrito
 </button>
       </div>
