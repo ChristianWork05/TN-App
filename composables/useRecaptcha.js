@@ -1,19 +1,18 @@
 import { useReCaptcha } from 'vue-recaptcha-v3'
 
 export default () => {
-    const recaptchaInstance = useReCaptcha()
+  const { executeRecaptcha, recaptchaLoaded } = useReCaptcha()
 
-    const executeRecaptcha = async action => {
-        await recaptchaInstance?.recaptchaLoaded()
-
-        const token = await recaptchaInstance?.executeRecaptcha(action)
-        const headerOptions = {
-            headers: {
-                'google-recaptcha-token': token
-            }
-        }
-        return { token, headerOptions }
+  const execute = async (action) => {
+    try {
+      await recaptchaLoaded() // Asegúrate de que reCAPTCHA esté cargado
+      const token = await executeRecaptcha(action) // Ejecuta reCAPTCHA con la acción especificada
+      return token
+    } catch (error) {
+      console.error('Error ejecutando reCAPTCHA:', error)
+      throw new Error('No se pudo ejecutar reCAPTCHA.')
     }
+  }
 
-    return { executeRecaptcha }
+  return { execute }
 }

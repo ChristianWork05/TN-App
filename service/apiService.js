@@ -33,8 +33,7 @@ export default {
 
     return apiClient.post('/user/login', data);
   },
-  register(name, lastname, ruc, rucType, phone, address, city, state, zip, country, email, password) {
-    const token = localStorage.getItem('userToken'); // Obtener el token del almacenamiento local
+  register(name, lastname, ruc, rucType, phone, address, email, password, recaptchaToken) {
     const data = JSON.stringify({
       name: name,
       lastname: lastname,
@@ -42,16 +41,34 @@ export default {
       rucType: rucType,
       phone: phone,
       address: address,
-      city: city,
-      state: state,
-      zip: zip,
-      country: country,
+      city: "MANTA", // Puedes parametrizar esto si es necesario
+      state: "MANABÍ", // Puedes parametrizar esto si es necesario
+      zip: "000000", // Puedes parametrizar esto si es necesario
+      country: "EC", // Puedes parametrizar esto si es necesario
       email: email,
       password: password,
-      token: token
+      token: recaptchaToken // Incluye el token de reCAPTCHA
     });
 
-    return apiClient.post('/user/register', data);
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://backend.devolada.ec/api/user/register',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+
+    return axios.request(config)
+      .then((response) => {
+        console.log('Registro exitoso:', JSON.stringify(response.data));
+        return response.data; // Devuelve los datos de la respuesta
+      })
+      .catch((error) => {
+        console.error('Error en el registro:', error);
+        throw error; // Lanza el error para que pueda ser manejado por el componente
+      });
   },
   getBranches() {
     return apiClient.get('/resto/branches');

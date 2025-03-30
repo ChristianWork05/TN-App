@@ -43,8 +43,8 @@
 
 <script setup>
 import { ref } from 'vue'
+import useRecaptcha from '../composables/useRecaptcha' // Importa el composable
 import apiService from '../service/apiService'
-import useRecaptcha from '../composables/useRecaptcha'
 
 const form = ref({
   name: '',
@@ -57,11 +57,15 @@ const form = ref({
   password: ''
 })
 
-const { executeRecaptcha } = useRecaptcha()
+const { execute } = useRecaptcha() // Usa el composable para ejecutar reCAPTCHA
 
 const handleRegister = async () => {
   try {
-    const { token, headerOptions } = await executeRecaptcha('register')
+    // Ejecuta reCAPTCHA y obtiene el token
+    const token = await execute('register')
+    console.log('Token de reCAPTCHA:', token)
+
+    // Envía los datos del formulario junto con el token de reCAPTCHA
     const response = await apiService.register(
       form.value.name,
       form.value.lastname,
@@ -71,13 +75,13 @@ const handleRegister = async () => {
       form.value.address,
       form.value.email,
       form.value.password,
-      headerOptions
+      { 'g-recaptcha-response': token } // Incluye el token en los headers o en el cuerpo
     )
     console.log('Registro exitoso:', response.data)
-    // Aquí puedes redirigir al usuario o mostrar un mensaje de éxito
+    alert('Registro exitoso. ¡Bienvenido!')
   } catch (error) {
     console.error('Error en el registro:', error)
-    // Aquí puedes mostrar un mensaje de error al usuario
+    alert('Error en el registro. Por favor, inténtalo de nuevo.')
   }
 }
 </script>
