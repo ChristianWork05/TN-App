@@ -13,7 +13,7 @@
       <path :d="tab.iconPath"></path>
       <path :d="tab.iconPath2"></path>
     </svg>
-    <span v-if="index === 2 && totalItems > 0" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">{{ totalItems }}</span>
+    <span v-if="index === 1 && totalItems > 0" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">{{ totalItems }}</span>
   </div>
 </nav>
 
@@ -33,8 +33,35 @@
   </svg>
   <h1 class="text-4xl font-bold">{{ menuData.title }}</h1>
 </div>
-<div v-if="activeTab === 0">
-  <h2 class="text-2xl font-bold">{{ menuData.subtitle }}</h2>
+<div v-if="activeTab === 0" class="flex h-full">
+  <Products @categorySelected="fetchProductsByCategory" @addToCart="addToCart" />
+</div>
+<div v-if="activeTab === 1">
+  <div v-if="cart.length === 0" class="text-center">El carrito está vacío</div>
+  <div v-else class="overflow-y-auto h-full cart-content">
+    <div v-for="(item, index) in cart" :key="index" class="flex justify-between items-center mb-4">
+      <div>
+        <h3 class="font-bold">{{ item.name }}</h3>
+        <p>{{ item.price | currency }} x {{ item.quantity }}</p>
+        <p v-if="item.extras && item.extras.length > 0">
+          Extras: {{ item.extras.map(extra => extra.name).join(', ') }}
+        </p>
+      </div>
+      <div class="flex items-center">
+        <button @click="removeFromCart(index)" class="text-red-500 hover:text-red-700">Eliminar</button>
+        <input type="number" v-model.number="item.quantity" min="1" @change="updateCartItem(index, item.quantity)" class="ml-2 w-12 text-center border rounded" />
+      </div>
+    </div>
+    <div class="border-t pt-4 cart-footer">
+      <p class="font-bold">Subtotal: {{ subtotal | currency }}</p>
+      <p class="font-bold">IVA (21%): {{ tax | currency }}</p>
+      <p class="font-bold">Total: {{ total | currency }}</p>
+    </div>
+    <button @click="handleCheckout" class="mt-4 bg-blue-500 text-white py-2 px-4 rounded w-full cart-button">Proceder a la Compra</button>
+  </div>
+</div>
+      <div v-if="activeTab === 2">
+        <h2 class="text-2xl font-bold">{{ menuData.subtitle }}</h2>
   <p class="text-lg mt-2">{{ menuData.description }}</p>
   <p class="text-gray-700 mt-4">{{ menuData.generalInfo }}</p>
   <ul class="list-disc list-inside mt-4">
@@ -50,54 +77,7 @@
   :alt="`Imagen de ${menuData.title}`"
   class="w-full h-48 object-cover rounded-md shadow-md"
 />
-  </div>
-</div>
-      <div v-if="activeTab === 1">
-  <Products v-if="!selectedCategory" @categorySelected="fetchProductsByCategory" />
-  <section class="py-12" v-if="selectedCategory">
-    <div class="container mx-auto">
-      <button @click="clearCategory" class="mb-4 flex items-center text-black hover:text-black">
-        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-        </svg>
-        Volver a Categorías
-      </button>
-      <div class="overflow-x-auto">
-        <div class="flex space-x-4 pb-4">
-          <div v-for="element in products" :key="element.name" class="border p-4 rounded min-w-[300px] max-h-[calc(100vh-200px)]">
-            <img :src="element.image" :alt="element.name" class="w-full h-48 object-cover">
-            <h3 class="text-xl font-bold mt-4">{{ element.name }}</h3>
-            <p class="mt-2">{{ element.price | currency }}</p>
-            <p v-if="element.discount" class="mt-2 text-red-500">Descuento: {{ element.discount }}</p>
-            <p class="mt-2 text-gray-500">Categoría: {{ element.category }}</p>
-            <button @click="addToCart(element)" class="mt-4 bg-blue-500 text-white py-2 px-4 rounded">Añadir al Carrito</button>
-          </div>
-        </div>
       </div>
-    </div>
-  </section>
-</div>
-      <div v-if="activeTab === 2">
-        <div v-if="cart.length === 0" class="text-center">El carrito está vacío</div>
-        <div v-else class="overflow-y-auto h-full cart-content">
-          <div v-for="(item, index) in cart" :key="index" class="flex justify-between items-center mb-4">
-            <div>
-              <h3 class="font-bold">{{ item.name }}</h3>
-              <p>{{ item.price | currency }} x {{ item.quantity }}</p>
-              <p v-if="item.discount">Descuento: {{ item.discount | currency }}</p>
-            </div>
-            <div class="flex items-center">
-              <button @click="removeFromCart(index)" class="text-red-500 hover:text-red-700">Eliminar</button>
-              <input type="number" v-model.number="item.quantity" min="1" @change="updateCartItem(index, item.quantity)" class="ml-2 w-12 text-center border rounded" />
-            </div>
-          </div>
-          <div class="border-t pt-4 cart-footer">
-            <p class="font-bold">Subtotal: {{ subtotal | currency }}</p>
-            <p class="font-bold">IVA (21%): {{ tax | currency }}</p>
-            <p class="font-bold">Total: {{ total | currency }}</p>
-          </div>
-          <button @click="handleCheckout" class="mt-4 bg-blue-500 text-white py-2 px-4 rounded w-full cart-button">Proceder a la Compra</button>
-        </div>
       </div>
       <div v-if="activeTab === 3">
   <h2 class="text-2xl font-bold">Ubicación</h2>
@@ -109,7 +89,7 @@
     frameborder="0"
     allowfullscreen
   ></iframe>
-</div>
+    </div>
       <div v-if="showLogin" class="modal-overlay" @click.self="showLogin = false">
         <div class="modal">
           <button class="modal-close" @click="showLogin = false">&times;</button>
@@ -158,11 +138,12 @@ const products = ref([])
 const showLogin = ref(false)
 
 const tabs = [
-  { iconClass: '', iconPath: 'm2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25', iconPath2: '' },
-  { iconClass: '', iconPath: 'm21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9', iconPath2: '' },
-  { iconClass: '', iconPath: 'M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z', iconPath2: '' },
+  { iconClass: '', iconPath: "m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9", iconPath2: '' },
+  { iconClass: '', iconPath: "M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" , iconPath2: '' },
+  { iconClass: '', iconPath: 'm11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z', iconPath2: '' },
   { iconClass: '', iconPath: 'M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z', iconPath2: 'M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z' }
 ]
+
 
 const menuData = ref({
   title: '',
@@ -350,6 +331,7 @@ const addToCart = (product) => {
   } else {
     cart.value.push({ ...product, quantity: 1 })
   }
+  console.log('Producto añadido al carrito:', cart.value) // Verificar en consola
 }
 
 // Verificar el estado de inicio de sesión al montar el componente
