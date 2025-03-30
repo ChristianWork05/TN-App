@@ -38,6 +38,12 @@
       </div>
       <button type="submit" class="register-button">Registrar</button>
     </form>
+
+        <!-- Toast -->
+    <div v-if="toast.show" :class="['toast', toast.type]" class="fixed bottom-4 right-4 p-4 rounded shadow">
+      {{ toast.message }}
+    </div>
+
   </div>
 </template>
 
@@ -45,6 +51,9 @@
 import { ref } from 'vue'
 import useRecaptcha from '../composables/useRecaptcha' // Importa el composable
 import apiService from '../service/apiService'
+
+// Declarar el evento que se emitirá al componente padre
+const emit = defineEmits(['closeRegisterModal'])
 
 const form = ref({
   name: '',
@@ -59,8 +68,15 @@ const form = ref({
 
 const { execute } = useRecaptcha() // Usa el composable para ejecutar reCAPTCHA
 
+const toast = ref({
+  show: false,
+  message: '',
+  type: '' // 'success' o 'error'
+})
+
 const handleRegister = async () => {
   try {
+    
     // Ejecuta reCAPTCHA y obtiene el token
     const token = await execute('register')
     console.log('Token de reCAPTCHA:', token)
@@ -79,10 +95,24 @@ const handleRegister = async () => {
     )
     console.log('Registro exitoso:', response.data)
     alert('Registro exitoso. ¡Bienvenido!')
+
+    // Mostrar toast de éxito
+    showToast('Registro exitoso. ¡Bienvenido!', 'success')
+
+    // Cerrar el modal de registro
+    emit('closeRegisterModal')
   } catch (error) {
     console.error('Error en el registro:', error)
     alert('Error en el registro. Por favor, inténtalo de nuevo.')
+    showToast('Error en el registro. Por favor, inténtalo de nuevo.', 'error')
   }
+}
+
+const showToast = (message, type) => {
+  toast.value = { show: true, message, type }
+  setTimeout(() => {
+    toast.value.show = false
+  }, 3000)
 }
 </script>
 
@@ -145,5 +175,23 @@ const handleRegister = async () => {
 
 .register-button:hover {
   background-color: #0056b3;
+}
+
+.toast {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  color: white;
+  font-weight: bold;
+}
+
+.toast.success {
+  background-color: #4caf50;
+}
+
+.toast.error {
+  background-color: #f44336;
 }
 </style>

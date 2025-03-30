@@ -26,6 +26,12 @@
         </svg>
       </button>
     </div>
+
+        <!-- Toast -->
+        <div v-if="toast.show" :class="['toast', toast.type]" class="fixed bottom-4 right-4 p-4 rounded shadow">
+      {{ toast.message }}
+    </div>
+    
   </div>
 </template>
 
@@ -39,18 +45,38 @@ const password = ref('')
 const router = useRouter()
 const showRegister = ref(false)
 
+const toast = ref({
+  show: false,
+  message: '',
+  type: '' // 'success' o 'error'
+})
+
 const handleLogin = async () => {
   try {
+
     const response = await apiService.login(email.value, password.value);
     console.log(JSON.stringify(response.data));
     // Guardar el token o la información del usuario en el almacenamiento local
     localStorage.setItem('user', JSON.stringify(response.data));
+
+        // Mostrar toast de éxito
+        showToast('Inicio de sesión exitoso', 'success')
+
     // Recargar la página para actualizar el estado de inicio de sesión
     location.reload();
   } catch (error) {
-    console.log(error);
+    console.error('Error en el inicio de sesión:', error)
+    showToast('Error en el inicio de sesión. Por favor, verifica tus credenciales.', 'error')
   }
 }
+
+const showToast = (message, type) => {
+  toast.value = { show: true, message, type }
+  setTimeout(() => {
+    toast.value.show = false
+  }, 3000)
+}
+
 </script>
 
 <style scoped>
@@ -84,5 +110,22 @@ button[type="submit"] {
   position: relative;
   width: 100%; /* Ajusta el ancho del botón al 100% del contenedor */
   transform: translateX(-5%);
+}
+.toast {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  color: white;
+  font-weight: bold;
+}
+
+.toast.success {
+  background-color: #4caf50;
+}
+
+.toast.error {
+  background-color: #f44336;
 }
 </style>
