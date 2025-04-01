@@ -1,14 +1,28 @@
 import axios from 'axios';
 
-const apiClient = axios.create({
-  baseURL: 'https://backend.devolada.ec/api', // Reemplaza con la URL de tu API
+// Configuración inicial de la API (por defecto KFC)
+let apiClient = axios.create({
+  baseURL: 'https://kfc.devolada.ec/api', // Base URL predeterminada
   headers: {
     'Content-Type': 'application/json'
   },
   maxBodyLength: Infinity
 });
 
+// Función para cambiar dinámicamente el baseURL
+const setBaseURL = (baseURL) => {
+  apiClient = axios.create({
+    baseURL: baseURL,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    maxBodyLength: Infinity
+  });
+};
+
 export default {
+  setBaseURL, // Exportamos la función para cambiar el baseURL
+
   getData() {
     return apiClient.get('/data');
   },
@@ -53,14 +67,14 @@ export default {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'https://backend.devolada.ec/api/user/register',
+      url: '/user/register', // URL relativa
       headers: {
         'Content-Type': 'application/json'
       },
       data: data
     };
 
-    return axios.request(config)
+    return apiClient.request(config)
       .then((response) => {
         console.log('Registro exitoso:', JSON.stringify(response.data));
         return response.data; // Devuelve los datos de la respuesta
@@ -73,4 +87,4 @@ export default {
   getBranches() {
     return apiClient.get('/resto/branches');
   }
-}
+};

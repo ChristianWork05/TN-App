@@ -7,10 +7,13 @@
         <div
           v-for="(menu, index) in menus"
           :key="menu.id"
-          @click="goToMenu(menu.id)"
+          @click="goToMenu(menu.id, menu.apiUrl)"
           class="relative cursor-pointer rounded-lg overflow-hidden transition-transform transform hover:scale-105 focus:scale-105 bg-cover bg-center"
           :style="{ backgroundImage: `url('${menu.image}')`, height: '300px', width: '300px' }"
         >
+<!--           <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-4">
+            <h2 class="text-lg font-bold">{{ menu.title }}</h2>
+          </div> -->
         </div>
       </div>
     </div>
@@ -20,20 +23,26 @@
 <script>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import apiService from '../service/apiService'
 
 export default {
   name: 'LandingPage',
   setup() {
     const menus = ref([
-      { id: 0, title: 'KFC', image: '/images/kfc.png' },
-      { id: 1, title: 'Pizza Hut', image: '/images/pizzahut.png' },
-      { id: 2, title: 'Starbucks', image: '/images/starbucks.png' }
+      { id: 0, title: 'KFC', image: '/images/kfc.png', apiUrl: 'https://kfc.devolada.ec/api' },
+      { id: 1, title: 'Pizza Hut', image: '/images/pizzahut.png', apiUrl: 'https://pizzahut.devolada.ec/api' },
+      { id: 2, title: 'Starbucks', image: '/images/starbucks.png', apiUrl: 'https://starbucks.devolada.ec/api' }
     ])
     const router = useRouter()
 
-    const goToMenu = (id) => {
-  router.push({ path: '/menu', query: { id } })
-}
+    const goToMenu = (id, apiUrl) => {
+      // Cambiar el baseURL de la API según la opción seleccionada
+      apiService.setBaseURL(apiUrl)
+      console.log(`Base URL cambiada a: ${apiUrl}`)
+
+      // Navegar a la página del menú
+      router.push({ path: '/menu', query: { id } })
+    }
 
     return {
       menus,
